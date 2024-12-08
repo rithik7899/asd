@@ -25,13 +25,17 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
 
     const { answerKeyUrl, zone, category } = body;
-    if ( !answerKeyUrl || !zone || !category ) {
+    if (!answerKeyUrl || !zone || !category) {
       return NextResponse.json(
-        { error: 'url, zone and category is required in the request body' },
-        { status: 400 }
+        {
+          error: 'url, zone and category is required in the request body'
+        },
+        {
+          status: 400
+        }
       );
     }
-    
+
     const response = await axios.get(answerKeyUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -105,14 +109,36 @@ export async function POST(req: NextRequest) {
       }
     });
 
-    const exam = await prisma.exam.create({
-      data: {
-        name: "Sample Examl",
-        examDate: new Date(),
-        negativeMarking: 0.4,
-        positiveMarking: 4
+    // const exam = await prisma.exam.create({
+    //   data: {
+    //     name: "Sample Examl",
+    //     examDate: new Date(),
+    //     negativeMarking: 0.4,
+    //     positiveMarking: 4
+    //   },
+    // });
+
+    const exam = await prisma.exam.findUnique({
+      where: {
+        name: subject
       },
-    });
+      select: {
+        examDate: true,
+        id: true,
+        examAttempts: true,
+        positiveMarking: true,
+        negativeMarking: true,
+
+      }
+    })
+
+    if (!exam) {
+      return NextResponse.json({
+        message: "Exam not found"
+      },{
+        status: 404
+      })
+    }
 
     await Promise.all(
       examData.questions.map(async (question) => {
@@ -165,39 +191,44 @@ export async function POST(req: NextRequest) {
 
     const userRank = await getRankForUser(exam.id, user.id);
 
-    return NextResponse.json({
-      fullName: examData.candidateInfo['Candidate Name'] || 'Unknown Candidate',
-      category,
-      testDate,
-      testTime,
-      rollNumber,
-      subject,
-      testCenter,
-      ranks: {
-        zoneRank: userRank.zoneRank,
-        overallRank: userRank.overallRank,
-        categoryRank: userRank.categoryRank,
-      },
-    });
+    return NextResponse.json(
+      {
+        fullName: examData.candidateInfo['Candidate Name'] || 'Unknown Candidate',
+        category,
+        testDate,
+        testTime,
+        rollNumber,
+        subject,
+        testCenter,
+        ranks: {
+          overallRank: userRank.overallRank,
+          categoryRank: userRank.categoryRank,
+        },
+      }
+    );
 
   } catch (error) {
     console.error('Error during scraping:', error);
 
     if (error instanceof Error) {
-      
+
       return NextResponse.json(
-        { 
-          error: error.message || 'An unknown error occurred.' 
+        {
+          error: error.message || 'An unknown error occurred.'
         },
-        { 
-          status: 500 
+        {
+          status: 500
         }
       );
     }
 
     return NextResponse.json(
-      { error: 'An unexpected error occurred.' },
-      { status: 500 }
+      {
+        error: 'An unexpected error occurred.'
+      },
+      {
+        status: 500
+      }
     );
   }
 }

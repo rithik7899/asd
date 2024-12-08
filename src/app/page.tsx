@@ -25,7 +25,7 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as z from "zod"
-import RankCard from "./ranking/page"
+import RankCard, { StudentProps } from "./ranking/page"
 
 const formSchema = z.object({
   answerKeyUrl: z.string().url().optional(),
@@ -38,6 +38,7 @@ const formSchema = z.object({
 
 export default function ExamRank() {
   const [isLoading, setIsLoading] = useState(false);
+  const [examData, setExamData] = useState<StudentProps | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -62,11 +63,12 @@ export default function ExamRank() {
         horizontalCat: values.horizontalCat,
         language: values.language
       });
-      console.log(data);
-      toast.success("Form submitted successfully!");
+      console.log(data.data);
+      setExamData(data.data)
+      toast.success("Submitted successfully!");
     } catch (error) {
       console.error(error);
-      toast.error("An error occurred while submitting the form.");
+      toast.error("An error occurred while submitting.");
     } finally {
       setIsLoading(false);
     }
@@ -77,7 +79,7 @@ export default function ExamRank() {
       <div className="mx-auto max-w-4xl space-y-8 ">
         <Card>
           <CardHeader>
-            <CardTitle className="text-2xl font-bold">Check Your Rank</CardTitle>
+            <CardTitle className="text-2xl text-purple-900 font-bold">Check Your Rank</CardTitle>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -185,7 +187,7 @@ export default function ExamRank() {
                       <FormItem>
                         <FormLabel>Password(optional)</FormLabel>
                         <FormControl>
-                          <Input type="password" {...field}/>
+                          <Input type="password" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -230,7 +232,7 @@ export default function ExamRank() {
                         </Select>
                         <FormMessage />
                       </FormItem>
-                      
+
                     )}
                   />
                 </div>
@@ -248,7 +250,7 @@ export default function ExamRank() {
             </Form>
           </CardContent>
         </Card>
-        <RankCard/>
+        {examData && <RankCard {...examData} />}
         {/* <pre>{JSON.stringify(data)}</pre> */}
       </div>
     </div>
