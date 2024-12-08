@@ -122,13 +122,13 @@ export default function RankCard({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2">
               <Card className="border-2">
                 <CardHeader>
-                  <CardTitle className="text-center text-sm font-medium text-gray-500">Overall Rank</CardTitle>
+                  <CardTitle className="text-center text-sm font-medium text-gray-500">Category Rank</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-center text-2xl font-bold text-purple-900">{ranks.overallRank}</p>
+                  <p className="text-center text-2xl font-bold text-purple-900">{ranks.categoryRank}</p>
                 </CardContent>
               </Card>
               {/* <Card className="border-2">
@@ -142,12 +142,12 @@ export default function RankCard({
             </div>
 
             <div className="mt-6">
-              <Card className="border-2">
+            <Card className="border-2">
                 <CardHeader>
-                  <CardTitle className="text-center text-sm font-medium text-gray-500">Category Rank</CardTitle>
+                  <CardTitle className="text-center text-sm font-medium text-gray-500">Overall Rank</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-center text-2xl font-bold text-purple-900">{ranks.categoryRank}</p>
+                  <p className="text-center text-2xl font-bold text-purple-900">{ranks.overallRank}</p>
                 </CardContent>
               </Card>
             </div>

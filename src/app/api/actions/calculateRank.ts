@@ -9,10 +9,10 @@ export const getRankForUser = async (examId: string, userId: string) => {
     throw new Error('User exam attempt not found');
   }
 
-  const { totalMarks, zone, category } = userMarks;
+  const { totalMarks, shiftTime, category } = userMarks;
 
   const overallRank = await getOverallRank(examId, totalMarks);
-  // const zoneRank = await getZoneRank(examId, zone, totalMarks);
+  const shiftRank = await getShiftRank(examId, shiftTime, totalMarks);
   const categoryRank = await getCategoryRank(examId, category, totalMarks);
 
   const overallCandidates =  await prisma.examAttempt.count({
@@ -27,6 +27,13 @@ export const getRankForUser = async (examId: string, userId: string) => {
       category 
     },
   });
+
+  const shiftCandidates = await prisma.examAttempt.count({
+    where: {
+      examId,
+      shiftTime
+    }
+  })
   // console.log({
   //   rank:'----------------------------------',
   //   overallRank: `${overallRank.rank}/${overallCandidates}`,
@@ -37,7 +44,7 @@ export const getRankForUser = async (examId: string, userId: string) => {
 
   return {
     overallRank: `${overallRank.rank}/${overallCandidates}`,
-    // zoneRank: `${zoneRank.rank}/${categoryCandidates}`,
+    shiftRank: `${shiftRank.rank}/${shiftCandidates}`,
     categoryRank: `${categoryRank.rank}/${categoryCandidates}`,
   };
 };
@@ -67,9 +74,9 @@ const getOverallRank = async (examId: string, userMarks: number) => {
   return { rank };
 };
 
-const getZoneRank = async (examId: string, zone: string, userMarks: number) => {
+const getShiftRank = async (examId: string, shiftTime: string, userMarks: number) => {
   const scores = await prisma.examAttempt.findMany({
-    where: { examId, zone },
+    where: { examId, shiftTime },
     select: { userId: true, totalMarks: true },
   });
 

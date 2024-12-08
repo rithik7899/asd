@@ -27,8 +27,9 @@ model User {
 
 model Exam {
   id              String        @id @default(cuid())
-  name            String        @unique
+  name            String
   examDate        DateTime
+  shiftTime       String        @unique
   negativeMarking Float
   positiveMarking Float
   ranks           Rank[]
@@ -77,6 +78,7 @@ model ExamAttempt {
   rollNumber  String
   zone        String
   category    String
+  shiftTime   String
   attemptDate DateTime @default(now())
   user        User     @relation(fields: [userId], references: [id])
   exam        Exam     @relation(fields: [examId], references: [id])

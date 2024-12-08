@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
 
     const exam = await prisma.exam.findUnique({
       where: {
-        name: subject
+        shiftTime: examData.candidateInfo["Test Time"]
       },
       select: {
         examDate: true,
@@ -168,6 +168,7 @@ export async function POST(req: NextRequest) {
         rollNumber: examData.candidateInfo["Roll Number"] || 'N/A',
         totalMarks: totalMarks,
         zone,
+        shiftTime: testTime,
         category
       },
     });
