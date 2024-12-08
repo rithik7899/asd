@@ -24,15 +24,15 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { url, zone, category } = body;
-    if ( !url || !zone || !category ) {
+    const { answerKeyUrl, zone, category } = body;
+    if ( !answerKeyUrl || !zone || !category ) {
       return NextResponse.json(
         { error: 'url, zone and category is required in the request body' },
         { status: 400 }
       );
     }
     
-    const response = await axios.get(url, {
+    const response = await axios.get(answerKeyUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
       }
@@ -107,9 +107,10 @@ export async function POST(req: NextRequest) {
 
     const exam = await prisma.exam.create({
       data: {
-        name: "Sample Exam",
+        name: "Sample Examl",
         examDate: new Date(),
         negativeMarking: 0.4,
+        positiveMarking: 4
       },
     });
 
@@ -132,7 +133,7 @@ export async function POST(req: NextRequest) {
       })
     );
 
-    const totalMarks = calculateMarks(examData.questions, exam.negativeMarking);
+    const totalMarks = calculateMarks(examData.questions, exam.positiveMarking, exam.negativeMarking);
     console.log(totalMarks, "total marks")
     const examAttempt = await prisma.examAttempt.create({
       data: {
@@ -151,7 +152,6 @@ export async function POST(req: NextRequest) {
         const chosenOption = question.chosenAnswer !== '--' ? question.chosenAnswer : 'Unanswered';
 
         console.log(chosenOption, " + ", question.correctAnswer.charAt(0))
-
 
         return {
           userId: user.id,
