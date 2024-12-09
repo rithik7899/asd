@@ -95,7 +95,15 @@ export function RankCard({
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-6 md:grid-cols-2">
+            <div className="grid gap-6 md:grid-cols-3">
+              <Card className="border-2">
+                <CardHeader>
+                  <CardTitle className="text-center text-sm font-medium text-gray-500">Overall Rank</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-center text-2xl font-bold text-purple-900">{ranks.overallRank}</p>
+                </CardContent>
+              </Card>
               <Card className="border-2">
                 <CardHeader>
                   <CardTitle className="text-center text-sm font-medium text-gray-500">Category Rank</CardTitle>
@@ -114,7 +122,7 @@ export function RankCard({
               </Card>
             </div>
 
-            <div className="mt-6">
+            {/* <div className="mt-6">
               <Card className="border-2">
                 <CardHeader>
                   <CardTitle className="text-center text-sm font-medium text-gray-500">Overall Rank</CardTitle>
@@ -123,7 +131,7 @@ export function RankCard({
                   <p className="text-center text-2xl font-bold text-purple-900">{ranks.overallRank}</p>
                 </CardContent>
               </Card>
-            </div>
+            </div> */}
 
             <div className="mt-6 grid gap-6 md:grid-cols-3">
               <Card className="border-2">
@@ -131,15 +139,7 @@ export function RankCard({
                   <CardTitle className="text-center text-sm font-medium text-gray-500">Average Marks</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-center text-2xl font-bold text-purple-900">{avgMarks.overallAverageMarks._avg.totalMarks}</p>
-                </CardContent>
-              </Card>
-              <Card className="border-2">
-                <CardHeader>
-                  <CardTitle className="text-center text-sm font-medium text-gray-500">Shift Average</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-center text-2xl font-bold text-purple-900">{avgMarks.shiftAverageMarks._avg.totalMarks}</p>
+                  <p className="text-center text-2xl font-bold text-purple-900">{avgMarks.overallAverageMarks._avg.totalMarks.toFixed(2)}</p>
                 </CardContent>
               </Card>
               <Card className="border-2">
@@ -147,7 +147,15 @@ export function RankCard({
                   <CardTitle className="text-center text-sm font-medium text-gray-500">Category Average</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-center text-2xl font-bold text-purple-900">{avgMarks.categoryAverageMarks._avg.totalMarks}</p>
+                  <p className="text-center text-2xl font-bold text-purple-900">{avgMarks.categoryAverageMarks._avg.totalMarks.toFixed(2)}</p>
+                </CardContent>
+              </Card>
+              <Card className="border-2">
+                <CardHeader>
+                  <CardTitle className="text-center text-sm font-medium text-gray-500">Shift Average</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-center text-2xl font-bold text-purple-900">{avgMarks.shiftAverageMarks._avg.totalMarks.toFixed(2)}</p>
                 </CardContent>
               </Card>
             </div>

@@ -1,5 +1,5 @@
 import prisma from "../../../../prisma/src";
-import { Question } from "../scrape/route";
+import { Question } from "../rank/route";
 
 export const calculateMarks = (questions: Question[], positiveMarking: number, negativeMarking: number): number => {
   return questions.reduce((total, question) => {
@@ -36,7 +36,6 @@ export async function getAverageMarks(examId: string, category: string, shiftTim
       totalMarks: true,
     }
   });
-  console.log(`${category} Category Average Marks: `, categoryAverageMarks._avg.totalMarks);
 
   const shiftAverageMarks = await prisma.examAttempt.aggregate({
     where: {

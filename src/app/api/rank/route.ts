@@ -91,7 +91,6 @@ export async function POST(req: NextRequest) {
     };
 
     examData.questions = extractQuestionData();
-    console.log(examData.candidateInfo)
 
     if (Object.keys(examData.candidateInfo).length === 0) {
       return NextResponse.json({ error: 'No candidate information found.' }, { status: 404 });
@@ -160,7 +159,7 @@ export async function POST(req: NextRequest) {
     );
 
     const totalMarks = calculateMarks(examData.questions, exam.positiveMarking, exam.negativeMarking);
-    console.log(totalMarks, "total marks")
+
     const examAttempt = await prisma.examAttempt.create({
       data: {
         userId: user.id,
@@ -178,8 +177,6 @@ export async function POST(req: NextRequest) {
         const questionId = extractQuestionId(question.question);
         const chosenOption = question.chosenAnswer !== '--' ? question.chosenAnswer : 'Unanswered';
 
-        console.log(chosenOption, " + ", question.correctAnswer.charAt(0))
-
         return {
           userId: user.id,
           questionId: questionId,
@@ -192,7 +189,6 @@ export async function POST(req: NextRequest) {
 
     const userRank = await getRankForUser(exam.id, user.id);
     const avgMarks = await getAverageMarks(exam.id, category, testTime)
-    console.log(avgMarks,"--------------------------")
 
     return NextResponse.json(
       {
