@@ -32,7 +32,6 @@ const formSchema = z.object({
   horizontalCat: z.string().optional(),
   category: z.string(),
   language: z.string(),
-  zone: z.string(),
   password: z.string().optional(),
 })
 
@@ -47,7 +46,6 @@ export default function SubmitForm() {
       horizontalCat: "",
       category: "",
       language: "",
-      zone: "",
       password: ""
     },
   })
@@ -57,7 +55,6 @@ export default function SubmitForm() {
     try {
       const data = await axios.post('/api/rank', {
         answerKeyUrl: values.answerKeyUrl,
-        zone: values.zone,
         category: values.category,
         password: values.password,
         horizontalCat: values.horizontalCat,
@@ -91,7 +88,7 @@ export default function SubmitForm() {
                       <FormItem>
                         <FormLabel>Answer Key URL</FormLabel>
                         <FormControl>
-                          <Input placeholder="https://" {...field} />
+                          <Input required placeholder="https://" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -103,7 +100,7 @@ export default function SubmitForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Category</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select onValueChange={field.onChange} required defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select category" />
@@ -151,7 +148,7 @@ export default function SubmitForm() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Paper Language</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <Select required onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder="Select language" />
@@ -188,46 +185,6 @@ export default function SubmitForm() {
                         <FormControl>
                           <Input type="password" {...field} />
                         </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="zone"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>RRB Zone</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger>
-                              <SelectValue placeholder="Select zone" />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            <SelectItem value="ahmedabad">Ahmedabad</SelectItem>
-                            <SelectItem value="ajmer">Ajmer</SelectItem>
-                            <SelectItem value="bangalore">Bangalore</SelectItem>
-                            <SelectItem value="bhopal">Bhopal</SelectItem>
-                            <SelectItem value="bhubaneswar">Bhubaneswar</SelectItem>
-                            <SelectItem value="bilaspur">Bilaspur</SelectItem>
-                            <SelectItem value="chandigarh">Chandigarh</SelectItem>
-                            <SelectItem value="chennai">Chennai</SelectItem>
-                            <SelectItem value="gorakhpur">Gorakhpur</SelectItem>
-                            <SelectItem value="guwahati">Guwahati</SelectItem>
-                            <SelectItem value="jammu-srinagar">Jammu-Srinagar</SelectItem>
-                            <SelectItem value="kolkata">Kolkata</SelectItem>
-                            <SelectItem value="malda">Malda</SelectItem>
-                            <SelectItem value="mumbai">Mumbai</SelectItem>
-                            <SelectItem value="muzaffarpur">Muzaffarpur</SelectItem>
-                            <SelectItem value="siliguri">Siliguri</SelectItem>
-                            <SelectItem value="patna">Patna</SelectItem>
-                            <SelectItem value="prayagraj">Prayagraj</SelectItem>
-                            <SelectItem value="ranchi">Ranchi</SelectItem>
-                            <SelectItem value="secundarabad">Secundarabad</SelectItem>
-                            <SelectItem value="thiruvananthapuram">Thiruvananthapuram</SelectItem>
-                          </SelectContent>
-                        </Select>
                         <FormMessage />
                       </FormItem>
                     )}
