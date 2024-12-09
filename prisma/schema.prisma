@@ -50,7 +50,7 @@ model Rank {
   id           String @id @default(cuid())
   userId       String
   examId       String
-  zoneRank     Int
+  // zoneRank     Int
   categoryRank Int
   overallRank  Int
   user         User   @relation(fields: [userId], references: [id])
@@ -76,7 +76,8 @@ model ExamAttempt {
   userId      String
   examId      String
   rollNumber  String
-  zone        String
+  // zone        String
+  language    String
   category    String
   shiftTime   String
   attemptDate DateTime @default(now())

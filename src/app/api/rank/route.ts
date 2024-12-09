@@ -24,11 +24,11 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    const { answerKeyUrl, zone, category } = body;
-    if (!answerKeyUrl || !zone || !category) {
+    const { answerKeyUrl, category, language } = body;
+    if (!answerKeyUrl || !category || !language) {
       return NextResponse.json(
         {
-          error: 'url, zone and category is required in the request body'
+          error: 'url, language and category is required in the request body'
         },
         {
           status: 400
@@ -64,6 +64,10 @@ export async function POST(req: NextRequest) {
     const testTime = examData.candidateInfo['Test Time'];
     const subject = examData.candidateInfo.Subject;
     const rollNumber = examData.candidateInfo['Roll Number'] || 'N/A'
+    
+    console.log(testCenter,testDate,testTime,subject,rollNumber);
+    
+
 
     const extractQuestionData = (): Question[] => {
       const questions: Question[] = [];
@@ -91,6 +95,8 @@ export async function POST(req: NextRequest) {
     };
 
     examData.questions = extractQuestionData();
+    console.log(examData);
+
 
     if (Object.keys(examData.candidateInfo).length === 0) {
       return NextResponse.json({ error: 'No candidate information found.' }, { status: 404 });
@@ -166,8 +172,8 @@ export async function POST(req: NextRequest) {
         examId: exam.id,
         rollNumber: examData.candidateInfo["Roll Number"] || 'N/A',
         totalMarks: totalMarks,
-        zone,
         shiftTime: testTime,
+        language,
         category
       },
     });
