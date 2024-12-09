@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 import { load } from 'cheerio';
 import prisma from '../../../../prisma/src';
-import { calculateMarks } from '../actions/calculateMarks';
+import { calculateMarks, getAverageMarks } from '../actions/calculateMarks';
 import { getRankForUser } from '../actions/calculateRank';
 
 interface CandidateInfo {
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
     };
 
     examData.questions = extractQuestionData();
-    console.log(examData)
+    console.log(examData.candidateInfo)
 
     if (Object.keys(examData.candidateInfo).length === 0) {
       return NextResponse.json({ error: 'No candidate information found.' }, { status: 404 });
@@ -191,6 +191,8 @@ export async function POST(req: NextRequest) {
     });
 
     const userRank = await getRankForUser(exam.id, user.id);
+    const avgMarks = await getAverageMarks(exam.id, category, testTime)
+    console.log(avgMarks,"--------------------------")
 
     return NextResponse.json(
       {
@@ -204,7 +206,9 @@ export async function POST(req: NextRequest) {
         ranks: {
           overallRank: userRank.overallRank,
           categoryRank: userRank.categoryRank,
+          shiftRank: userRank.shiftRank
         },
+        avgMarks
       }
     );
 
