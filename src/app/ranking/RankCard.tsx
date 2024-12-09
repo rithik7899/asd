@@ -2,97 +2,52 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { JSX } from "react"
 
-// interface ExamResult {
-//   candidateName: string
-//   rollNumber: string
-//   category: string
-//   examDate: string,
-//   examTime: string
-//   venueName: string
-//   subjectName: string
-//   rrbZone: string
-//   ranks: {
-//     zone: string
-//     overall: string
-//     shift: string
-//     category: string
-//   }
-//   averageMarks: {
-//     overall: number
-//     shift: number
-//     category: number
-//   }
-// }
-
 export interface StudentProps {
-    fullName: string,
-    category: string,
-    testDate: string,
-    testTime: string,
-    rollNumber: number,
-    ranks: {
-        overallRank: number,
-        categoryRank: number,
-        shiftRank: number
+  fullName: string,
+  category: string,
+  testDate: string,
+  testTime: string,
+  rollNumber: number,
+  ranks: {
+    overallRank: number,
+    categoryRank: number,
+    shiftRank: number
+  },
+  testCenter: string,
+  subject: string,
+  avgMarks: {
+    overallAverageMarks: {
+      _avg: {
+        totalMarks: number
+      }
     },
-    testCenter: string,
-    subject: string,
-    avgMarks: {
-        overallAverageMarks: {
-            _avg: {
-                totalMarks: number
-            }
-        },
-        categoryAverageMarks: {
-            _avg: {
-                totalMarks: number
-            }
-        },
-        shiftAverageMarks: {
-            _avg: {
-                totalMarks: number
-            }
-        }
-    }
-}
-
-export default function RankCard({ 
-    fullName, 
-    category, 
-    testDate, 
-    testTime, 
-    rollNumber, 
-    ranks, 
-    testCenter, 
-    subject,
-    avgMarks }: StudentProps ): JSX.Element {
-
-  const result = {
-//     candidateName: "Manmohan Singh",
-//     rollNumber: "281241170410494",
-//     category: "OBC",
-//     examDate: "26/11/2024",
-//     examTime: "12:30 PM - 1:30 PM",
-//     venueName: "iON Digital Zone iDZ 2 Sector 62",
-//     subjectName: "ALP Stage 1",
-//     rrbZone: "gorakhpur",
-//     ranks: {
-//       zone: "157/655",
-//       overall: "13428/61288",
-//       shift: "819/3986",
-//       category: "2299/31235"
-//     },
-    averageMarks: {
-      overall: 32.96,
-      shift: 32.68,
-      category: 34.86
+    categoryAverageMarks: {
+      _avg: {
+        totalMarks: number
+      }
+    },
+    shiftAverageMarks: {
+      _avg: {
+        totalMarks: number
+      }
     }
   }
+}
+
+export function RankCard({
+  fullName,
+  category,
+  testDate,
+  testTime,
+  rollNumber,
+  ranks,
+  testCenter,
+  subject,
+  avgMarks }: StudentProps): JSX.Element {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white p-6">
       <div className="mx-auto max-w-4xl space-y-6">
-        {/* Candidat details Card */}
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl font-bold text-purple-900">Candidate Details</CardTitle>
@@ -133,7 +88,6 @@ export default function RankCard({
           </CardContent>
         </Card>
 
-        {/* Rankings Card */}
         <Card className="bg-gradient-to-br from-purple-100 to-white">
           <CardHeader>
             <CardTitle className="text-center text-2xl font-bold text-purple-900">
@@ -161,7 +115,7 @@ export default function RankCard({
             </div>
 
             <div className="mt-6">
-            <Card className="border-2">
+              <Card className="border-2">
                 <CardHeader>
                   <CardTitle className="text-center text-sm font-medium text-gray-500">Overall Rank</CardTitle>
                 </CardHeader>

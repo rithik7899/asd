@@ -25,7 +25,7 @@ import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
 import * as z from "zod"
-import RankCard, { StudentProps } from "./ranking/page"
+import { RankCard, StudentProps } from "@/app/ranking/RankCard"
 
 const formSchema = z.object({
   answerKeyUrl: z.string().url().optional(),
@@ -251,7 +251,6 @@ export default function ExamRank() {
           </CardContent>
         </Card>
         {examData && <RankCard {...examData} />}
-        {/* <pre>{JSON.stringify(data)}</pre> */}
       </div>
     </div>
   )
