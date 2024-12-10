@@ -1,5 +1,5 @@
 import prisma from '../../../../prisma/src';
-import redis from '@/app/Redis/redis';
+import redis from '@/lib/redis';
 
 const CACHE_EXPIRATION = 600;
 
@@ -50,14 +50,3 @@ export async function getMarksAboveInfo(): Promise<MarksAboveData> {
   return marksAboveData;
 }
 
-// testing
-
-// async function main() {
-//   const data = await getMarksAboveInfo();
-//   console.log(JSON.stringify(data, null, 2));
-// }
-
-// main().catch((e) => {
-//   console.error(e);
-//   process.exit(1);
-// });

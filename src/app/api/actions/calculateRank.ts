@@ -1,4 +1,4 @@
-import redis from '../../Redis/redis';
+import redis from '../../../lib/redis';
 import  prisma  from '../../../../prisma/src';
 
 const TTL = 10; // will change this
