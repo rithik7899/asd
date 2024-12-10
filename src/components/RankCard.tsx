@@ -275,6 +275,32 @@ export function RankCard({
               <div className="bg-purple-600 text-white py-3 px-4 rounded-lg text-center font-medium">
                 Your Normalised Rank
               </div>
+              <div className="grid gap-6 md:grid-cols-3 mt-3">
+              <Card className="border-2">
+                <CardHeader>
+                  <CardTitle className="text-center text-sm font-medium text-gray-500">Rank</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-center text-2xl font-bold text-purple-900">--</p>
+                </CardContent>
+              </Card>
+              <Card className="border-2">
+                <CardHeader>
+                  <CardTitle className="text-center text-sm font-medium text-gray-500">Shift Rank</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-center text-2xl font-bold text-purple-900">--</p>
+                </CardContent>
+              </Card>
+              <Card className="border-2">
+                <CardHeader>
+                  <CardTitle className="text-center text-sm font-medium text-gray-500">Category Rank</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-center text-2xl font-bold text-purple-900">--</p>
+                </CardContent>
+              </Card>
+              </div>
             </div>
           </CardContent>
         </Card>
