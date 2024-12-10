@@ -35,10 +35,17 @@ const DownloadCard = forwardRef<HTMLDivElement, ScoreCardProps>(({
     subjectData.wrong = (subjectData.attempted + subjectData.notAttempted) - subjectData.correct
 
     return (
-        <Card ref={ref} hidden className="w-[600px] p-6 space-y-6">
+        <Card ref={ref}
+            style={{
+                position: "absolute",
+                top: "-9999px",
+                left: "-9999px",
+                visibility: "hidden",
+            }}
+            className="w-[600px] p-6 space-y-6">
             <div className="text-purple-900 text-primary-foreground p-4 -mx-6 -mt-6 rounded-t-lg">
                 <h1 className="text-xl font-semibold">
-                    ALP Stage 1 Scorecard 
+                    ALP Stage 1 Scorecard
                 </h1>
             </div>
 
@@ -76,7 +83,7 @@ const DownloadCard = forwardRef<HTMLDivElement, ScoreCardProps>(({
                         <TableCell className="text-center">{subjectData.notAttempted}</TableCell>
                         <TableCell className="text-center">{subjectData.correct}</TableCell>
                         <TableCell className="text-center">{subjectData.wrong}</TableCell>
-                        <TableCell className="text-center">{subjectData.totalMarks}</TableCell>
+                        <TableCell className="text-center">{subjectData.totalMarks.toFixed(2)}</TableCell>
                     </TableRow>
                     <TableRow className="text-purple-900 text-primary-foreground font-medium">
                         <TableCell>Overall</TableCell>
@@ -84,7 +91,7 @@ const DownloadCard = forwardRef<HTMLDivElement, ScoreCardProps>(({
                         <TableCell className="text-center">{subjectData.notAttempted}</TableCell>
                         <TableCell className="text-center">{subjectData.correct}</TableCell>
                         <TableCell className="text-center">{subjectData.wrong}</TableCell>
-                        <TableCell className="text-center">{subjectData.totalMarks}</TableCell>
+                        <TableCell className="text-center">{subjectData.totalMarks.toFixed(2)}</TableCell>
                     </TableRow>
                 </TableBody>
             </Table>
@@ -92,6 +99,6 @@ const DownloadCard = forwardRef<HTMLDivElement, ScoreCardProps>(({
     )
 })
 
-DownloadCard.displayName = 'DownloadCard';
+// DownloadCard.displayName = 'DownloadCard';
 
 export default DownloadCard;
