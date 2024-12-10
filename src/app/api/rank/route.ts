@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    let config = {
+    const config = {
       method: 'get',
       maxBodyLength: Infinity,
       url: answerKeyUrl,
