@@ -20,7 +20,7 @@ interface ScoreCardProps {
     }
 }
 
-export const ScoreCard = forwardRef<HTMLDivElement, ScoreCardProps>(({
+const DownloadCard = forwardRef<HTMLDivElement, ScoreCardProps>(({
     name,
     category,
     examDate,
@@ -91,3 +91,7 @@ export const ScoreCard = forwardRef<HTMLDivElement, ScoreCardProps>(({
         </Card>
     )
 })
+
+DownloadCard.displayName = 'DownloadCard';
+
+export default DownloadCard;
