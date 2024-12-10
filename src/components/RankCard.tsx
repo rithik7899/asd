@@ -3,8 +3,10 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Download } from 'lucide-react'
-import { JSX } from "react"
+import { JSX, useRef } from "react"
+import { toPng } from "html-to-image"
 import TopRankers from "./TopRank"
+import ScoreCard from "./DownloadCard"
 
 export interface MarksAboveData {
   marksAbove70: Record<string, number>;
@@ -73,8 +75,35 @@ export function RankCard({
   topRankers
 }: StudentProps): JSX.Element {
 
+  const scorecardRef = useRef<HTMLDivElement | null>(null)
+
+  const downloadScorecard = async () => {
+    if (scorecardRef.current) {
+      const dataUrl = await toPng(scorecardRef.current, {
+        quality: 1.0,
+        backgroundColor: 'white',
+      });
+
+      const link = document.createElement('a');
+      link.download = `_scorecard.png`;
+      link.href = dataUrl;
+      link.click();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white p-6">
+      <ScoreCard
+        category={category}
+        name={fullName}
+        examDate={testDate}
+        examTime={testTime}
+        totalMarks={stats.totalMarks}
+        rawRank={ranks.overallRank}
+        subjectData={stats}
+      //  normalizedMarks=0
+      //  normalizedMarks=0
+      />
       <div className="mx-auto max-w-4xl space-y-6">
         <Card>
           <CardHeader>
@@ -224,7 +253,7 @@ export function RankCard({
             </Table>
 
             <div className="mt-4 flex justify-center">
-              <Button variant="default" className="bg-purple-600 hover:bg-purple-700 text-white">
+              <Button variant="default" onClick={downloadScorecard} className="bg-purple-600 hover:bg-purple-700 text-white">
                 <Download className="mr-2 h-4 w-4" />
                 Download Your Scorecard Again
               </Button>
@@ -249,7 +278,7 @@ export function RankCard({
           </CardContent>
         </Card>
       </div>
-      <TopRankers data={topRankers}/>
+      <TopRankers data={topRankers} />
     </div>
   )
 }
