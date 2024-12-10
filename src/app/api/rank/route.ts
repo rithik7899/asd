@@ -4,6 +4,7 @@ import { load } from 'cheerio';
 import prisma from '../../../../prisma/src';
 import { calculateMarks, getAverageMarks } from '../actions/calculateMarks';
 import { getRankForUser } from '../actions/calculateRank';
+import { calculateQuestionStats } from '../actions/calculateQStats';
 
 interface CandidateInfo {
   [key: string]: string;
@@ -64,15 +65,12 @@ export async function POST(req: NextRequest) {
     const testTime = examData.candidateInfo['Test Time'];
     const subject = examData.candidateInfo.Subject;
     const rollNumber = examData.candidateInfo['Roll Number'] || 'N/A'
-    
-    console.log(testCenter,testDate,testTime,subject,rollNumber);
-    
 
+    console.log(testCenter, testDate, testTime, subject, rollNumber);
 
     const extractQuestionData = (): Question[] => {
       const questions: Question[] = [];
 
-      // Multiple selector strategies
       const questionPanels = $('.question-pnl, .question-panel, .exam-question, table.questions');
 
       questionPanels.each((index, questionPanel) => {
@@ -97,7 +95,6 @@ export async function POST(req: NextRequest) {
     examData.questions = extractQuestionData();
     console.log(examData);
 
-
     if (Object.keys(examData.candidateInfo).length === 0) {
       return NextResponse.json({ error: 'No candidate information found.' }, { status: 404 });
     }
@@ -107,25 +104,13 @@ export async function POST(req: NextRequest) {
       return match ? match[1] : '';
     };
 
-    const user = await prisma.user.create({
-      data: {
-        name: examData.candidateInfo['Candidate Name'] || 'Unknown Candidate',
-        category
-      }
-    });
-
-    // const exam = await prisma.exam.create({
-    //   data: {
-    //     name: "Sample Examl",
-    //     examDate: new Date(),
-    //     negativeMarking: 0.4,
-    //     positiveMarking: 4
-    //   },
-    // });
-
     const exam = await prisma.exam.findUnique({
       where: {
-        shiftTime: examData.candidateInfo["Test Time"]
+        examDate_shiftTime_name: {
+          examDate: testDate,
+          shiftTime: examData.candidateInfo["Test Time"],
+          name: subject,
+        },
       },
       select: {
         examDate: true,
@@ -133,68 +118,139 @@ export async function POST(req: NextRequest) {
         examAttempts: true,
         positiveMarking: true,
         negativeMarking: true,
-
-      }
-    })
+      },
+    });
 
     if (!exam) {
       return NextResponse.json({
         message: "Exam not found"
-      },{
+      }, {
         status: 404
-      })
+      });
     }
-
-    await Promise.all(
-      examData.questions.map(async (question) => {
-        const questionId = extractQuestionId(question.question);
-        const correctOption = question.correctAnswer.charAt(0);
-
-        await prisma.question.upsert({
-          where: { questionId: questionId },
-          update: {
-            correctOption: correctOption,
-          },
-          create: {
-            questionId: questionId,
-            correctOption: correctOption,
-            examId: exam.id
-          },
-        });
-      })
-    );
 
     const totalMarks = calculateMarks(examData.questions, exam.positiveMarking, exam.negativeMarking);
 
-    const examAttempt = await prisma.examAttempt.create({
-      data: {
-        userId: user.id,
-        examId: exam.id,
-        rollNumber: examData.candidateInfo["Roll Number"] || 'N/A',
-        totalMarks: totalMarks,
-        shiftTime: testTime,
-        language,
-        category
-      },
+    const attempt = await prisma.examAttempt.findUnique({
+      where: {
+        rollNumber,
+        examId: exam.id
+      }
     });
 
-    await prisma.answer.createMany({
-      data: examData.questions.map((question) => {
-        const questionId = extractQuestionId(question.question);
-        const chosenOption = question.chosenAnswer !== '--' ? question.chosenAnswer : 'Unanswered';
+    if (attempt) {
+      await prisma.examAttempt.update({
+        where: {
+          rollNumber,
+          examId: exam.id
+        },
+        data: {
+          language,
+          category,
+        }
+      });
 
-        return {
-          userId: user.id,
-          questionId: questionId,
-          chosenOption: chosenOption,
-          isCorrect: chosenOption === question.correctAnswer.charAt(0),
-          examAttemptId: examAttempt.id,
-        };
-      }),
-    });
+      let user = await prisma.user.findFirst({
+        where: {
+          examAttempts: {
+            some: {
+              rollNumber,
+              examId: exam.id,
+            },
+          },
+        },
+      });
 
-    const userRank = await getRankForUser(exam.id, user.id);
-    const avgMarks = await getAverageMarks(exam.id, category, testTime)
+      if (user) {
+        user = await prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            category,
+          },
+        });
+      } else {
+        user = await prisma.user.create({
+          data: {
+            name: examData.candidateInfo["Candidate Name"] || "Unknown Candidate",
+            category,
+          },
+        });
+      }
+
+    } else {
+      let user = await prisma.user.findFirst({
+        where: {
+          examAttempts: {
+            some: {
+              rollNumber,
+              examId: exam.id,
+            },
+          },
+        },
+      });
+
+      if (user) {
+        user = await prisma.user.update({
+          where: {
+            id: user.id,
+          },
+          data: {
+            category,
+          },
+        });
+      } else {
+        user = await prisma.user.create({
+          data: {
+            name: examData.candidateInfo["Candidate Name"] || "Unknown Candidate",
+            category,
+          },
+        });
+      }
+
+      const examAttempt = await prisma.examAttempt.create({
+        data: {
+          userId: user?.id,
+          examId: exam.id,
+          rollNumber: examData.candidateInfo["Roll Number"] || 'N/A',
+          totalMarks: totalMarks,
+          shiftTime: testTime,
+          language,
+          category,
+          attemptDate: testDate
+        },
+      });
+
+      await Promise.all(
+        examData.questions.map(async (question) => {
+          const questionId = extractQuestionId(question.question);
+          const correctOption = question.correctAnswer.charAt(0);
+
+          await prisma.question.upsert({
+            where: { questionId: questionId },
+            update: { correctOption: correctOption },
+            create: { questionId: questionId, correctOption: correctOption, examId: exam.id }
+          });
+
+          const chosenOption = question.chosenAnswer !== '--' ? question.chosenAnswer : 'Unanswered';
+
+          await prisma.answer.createMany({
+            data: [{
+              userId: user?.id,
+              questionId: questionId,
+              chosenOption: chosenOption,
+              isCorrect: chosenOption === question.correctAnswer.charAt(0),
+              examAttemptId: examAttempt.id,
+            }]
+          });
+        })
+      );
+    }
+
+    const userRank = await getRankForUser(exam.id, rollNumber);
+    const avgMarks = await getAverageMarks(exam.id, category, testTime);
+    const questionStats = calculateQuestionStats(examData.questions, totalMarks);
 
     return NextResponse.json(
       {
@@ -210,7 +266,14 @@ export async function POST(req: NextRequest) {
           categoryRank: userRank.categoryRank,
           shiftRank: userRank.shiftRank
         },
-        avgMarks
+        avgMarks,
+        stats: {
+          attempted: questionStats.attempted,
+          notAttempted: questionStats.notAttempted,
+          correct: questionStats.correct,
+          wrong: questionStats.wrong,
+          totalMarks: questionStats.totalMarks
+        }
       }
     );
 
@@ -218,7 +281,6 @@ export async function POST(req: NextRequest) {
     console.error('Error during scraping:', error);
 
     if (error instanceof Error) {
-
       return NextResponse.json(
         {
           error: error.message || 'An unknown error occurred.'

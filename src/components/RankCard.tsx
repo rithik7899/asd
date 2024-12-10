@@ -1,20 +1,23 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Download } from 'lucide-react'
 import { JSX } from "react"
 
 export interface StudentProps {
-  fullName: string,
-  category: string,
-  testDate: string,
-  testTime: string,
-  rollNumber: number,
+  fullName: string
+  category: string
+  testDate: string
+  testTime: string
+  rollNumber: string
+  subject: string
+  testCenter: string
   ranks: {
-    overallRank: number,
-    categoryRank: number,
+    overallRank: number
+    categoryRank: number
     shiftRank: number
-  },
-  testCenter: string,
-  subject: string,
+  }
   avgMarks: {
     overallAverageMarks: {
       _avg: {
@@ -32,6 +35,13 @@ export interface StudentProps {
       }
     }
   }
+  stats: {
+    attempted: number
+    notAttempted: number
+    correct: number
+    wrong: number
+    totalMarks: number
+  }
 }
 
 export function RankCard({
@@ -43,7 +53,9 @@ export function RankCard({
   ranks,
   testCenter,
   subject,
-  avgMarks }: StudentProps): JSX.Element {
+  avgMarks,
+  stats
+}: StudentProps): JSX.Element {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white p-6">
@@ -122,24 +134,15 @@ export function RankCard({
               </Card>
             </div>
 
-            {/* <div className="mt-6">
-              <Card className="border-2">
-                <CardHeader>
-                  <CardTitle className="text-center text-sm font-medium text-gray-500">Overall Rank</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-center text-2xl font-bold text-purple-900">{ranks.overallRank}</p>
-                </CardContent>
-              </Card>
-            </div> */}
-
             <div className="mt-6 grid gap-6 md:grid-cols-3">
               <Card className="border-2">
                 <CardHeader>
                   <CardTitle className="text-center text-sm font-medium text-gray-500">Average Marks</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-center text-2xl font-bold text-purple-900">{avgMarks.overallAverageMarks._avg.totalMarks.toFixed(2)}</p>
+                  <p className="text-center text-2xl font-bold text-purple-900">
+                    {avgMarks.overallAverageMarks._avg.totalMarks.toFixed(2)}
+                  </p>
                 </CardContent>
               </Card>
               <Card className="border-2">
@@ -147,7 +150,9 @@ export function RankCard({
                   <CardTitle className="text-center text-sm font-medium text-gray-500">Category Average</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-center text-2xl font-bold text-purple-900">{avgMarks.categoryAverageMarks._avg.totalMarks.toFixed(2)}</p>
+                  <p className="text-center text-2xl font-bold text-purple-900">
+                    {avgMarks.categoryAverageMarks._avg.totalMarks.toFixed(2)}
+                  </p>
                 </CardContent>
               </Card>
               <Card className="border-2">
@@ -155,9 +160,75 @@ export function RankCard({
                   <CardTitle className="text-center text-sm font-medium text-gray-500">Shift Average</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-center text-2xl font-bold text-purple-900">{avgMarks.shiftAverageMarks._avg.totalMarks.toFixed(2)}</p>
+                  <p className="text-center text-2xl font-bold text-purple-900">
+                    {avgMarks.shiftAverageMarks._avg.totalMarks.toFixed(2)}
+                  </p>
                 </CardContent>
               </Card>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="overflow-hidden">
+          <CardHeader>
+            <CardTitle className="text-center text-2xl font-bold text-purple-900">
+              Marks in each subjects
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Table>
+              <TableHeader>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="w-[200px] text-left font-medium text-gray-500">Subject</TableHead>
+                  <TableHead className="text-right font-medium text-gray-500">Attem.</TableHead>
+                  <TableHead className="text-right font-medium text-gray-500">Not Attem.</TableHead>
+                  <TableHead className="text-right font-medium text-gray-500">R</TableHead>
+                  <TableHead className="text-right font-medium text-gray-500">W</TableHead>
+                  <TableHead className="text-right font-medium text-gray-500">Marks</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow className="hover:bg-gray-50">
+                  <TableCell>{subject}</TableCell>
+                  <TableCell className="text-right">{stats.attempted}</TableCell>
+                  <TableCell className="text-right">{stats.notAttempted}</TableCell>
+                  <TableCell className="text-right">{stats.correct}</TableCell>
+                  <TableCell className="text-right">{stats.wrong}</TableCell>
+                  <TableCell className="text-right">{stats.totalMarks.toFixed(2)}</TableCell>
+                </TableRow>
+                <TableRow className="bg-gray-100 hover:bg-gray-200">
+                  <TableCell className="font-medium">Overall</TableCell>
+                  <TableCell className="text-right">{stats.attempted}</TableCell>
+                  <TableCell className="text-right">{stats.notAttempted}</TableCell>
+                  <TableCell className="text-right">{stats.correct}</TableCell>
+                  <TableCell className="text-right">{stats.wrong}</TableCell>
+                  <TableCell className="text-right">{stats.totalMarks.toFixed(2)}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+
+            <div className="mt-4 flex justify-center">
+              <Button variant="default" className="bg-purple-600 hover:bg-purple-700 text-white">
+                <Download className="mr-2 h-4 w-4" />
+                Download Your Scorecard Again
+              </Button>
+            </div>
+
+            <div className="mt-6 space-y-2 text-center">
+              <p className="text-sm">
+                <span className="font-medium text-gray-500">Bonus Marks:</span>{" "}
+                <span className="text-purple-600 font-semibold">+0</span>
+              </p>
+              <p className="text-sm">
+                <span className="font-medium text-gray-500">Normalised Marks:</span>{" "}
+                <span className="font-semibold text-gray-900">--</span>
+              </p>
+            </div>
+
+            <div className="mt-6">
+              <div className="bg-purple-600 text-white py-3 px-4 rounded-lg text-center font-medium">
+                Your Normalised Rank
+              </div>
             </div>
           </CardContent>
         </Card>

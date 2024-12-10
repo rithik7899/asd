@@ -28,13 +28,15 @@ model User {
 model Exam {
   id              String        @id @default(cuid())
   name            String
-  examDate        DateTime
-  shiftTime       String        @unique
+  examDate        String
+  shiftTime       String
   negativeMarking Float
   positiveMarking Float
   ranks           Rank[]
   questions       Question[]
   examAttempts    ExamAttempt[]
+
+  @@unique([examDate, shiftTime, name])
 }
 
 model Question {
@@ -61,27 +63,27 @@ model Rank {
 
 model Answer {
   id            String      @id @default(cuid())
-  userId        String
+  userId        String?
   questionId    String
   examAttemptId String
   chosenOption  String?
   isCorrect     Boolean?
-  user          User        @relation(fields: [userId], references: [id])
+  user          User?        @relation(fields: [userId], references: [id])
   question      Question    @relation(fields: [questionId], references: [questionId])
   ExamAttempt   ExamAttempt @relation(fields: [examAttemptId], references: [id])
 }
 
 model ExamAttempt {
   id          String   @id @default(cuid())
-  userId      String
+  userId      String?
   examId      String
-  rollNumber  String
+  rollNumber  String   @unique
   // zone        String
   language    String
   category    String
   shiftTime   String
-  attemptDate DateTime @default(now())
-  user        User     @relation(fields: [userId], references: [id])
+  attemptDate String
+  user        User?    @relation(fields: [userId], references: [id])
   exam        Exam     @relation(fields: [examId], references: [id])
   answers     Answer[]
   totalMarks  Float
