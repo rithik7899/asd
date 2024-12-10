@@ -1,12 +1,14 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '../../../../prisma/src';
 import redis from '@/app/Redis/redis';
-
-const prisma = new PrismaClient();
 
 const CACHE_EXPIRATION = 600;
 
-export async function getMarksAboveInfo() {
-  const marksAboveData = {};
+type MarksAboveData = {
+  [key: string]: Record<string, number>;
+};
+
+export async function getMarksAboveInfo(): Promise<MarksAboveData> {
+  const marksAboveData: MarksAboveData = {};
 
   const ranges = [
     { range: '70', filter: { totalMarks: { gt: 70 } } },
@@ -37,7 +39,7 @@ export async function getMarksAboveInfo() {
       const categoryCount = data.reduce((acc, { category }) => {
         acc[category] = (acc[category] || 0) + 1;
         return acc;
-      }, {});
+      }, {} as Record<string, number>);
 
       marksAboveData[`marksAbove${range}`] = categoryCount;
 
@@ -48,7 +50,7 @@ export async function getMarksAboveInfo() {
   return marksAboveData;
 }
 
-//testing
+// testing
 
 // async function main() {
 //   const data = await getMarksAboveInfo();

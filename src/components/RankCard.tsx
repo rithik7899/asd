@@ -6,7 +6,7 @@ import { Download } from 'lucide-react'
 import { JSX, useRef } from "react"
 import { toPng } from "html-to-image"
 import TopRankers from "./TopRank"
-import ScoreCard from "./DownloadCard"
+import { ScoreCard } from "./DownloadCard"
 
 export interface MarksAboveData {
   marksAbove70: Record<string, number>;
@@ -101,6 +101,7 @@ export function RankCard({
         totalMarks={stats.totalMarks}
         rawRank={ranks.overallRank}
         subjectData={stats}
+        ref={scorecardRef}
       //  normalizedMarks=0
       //  normalizedMarks=0
       />

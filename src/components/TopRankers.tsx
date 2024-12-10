@@ -28,7 +28,7 @@ export default function DynamicTopRankersTable({ data }: { data: MarksAboveData 
     return (
         <div className="w-full">
             <div className="bg-purple-600 text-cyan-50 p-4 text-center text-lg font-medium">
-                Filtered Marks
+                Category wise Marks
             </div>
             <div className="rounded-lg border overflow-x-auto">
                 <Table>

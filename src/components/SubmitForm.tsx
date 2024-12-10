@@ -72,7 +72,7 @@ export default function SubmitForm() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white p-4 md:p-8">
-      <div className="mx-auto max-w-4xl space-y-8 ">
+      <div className="mx-auto max-w-5xl space-y-8 ">
         <Card>
           <CardHeader>
             <CardTitle className="text-2xl text-purple-900 font-bold">Check Your Rank</CardTitle>
