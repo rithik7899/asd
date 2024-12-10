@@ -5,6 +5,7 @@ import prisma from '../../../../prisma/src';
 import { calculateMarks, getAverageMarks } from '../actions/calculateMarks';
 import { getRankForUser } from '../actions/calculateRank';
 import { calculateQuestionStats } from '../actions/calculateQStats';
+import { getMarksAboveInfo } from '../actions/rankMarks';
 
 interface CandidateInfo {
   [key: string]: string;
@@ -251,6 +252,7 @@ export async function POST(req: NextRequest) {
     const userRank = await getRankForUser(exam.id, rollNumber);
     const avgMarks = await getAverageMarks(exam.id, category, testTime);
     const questionStats = calculateQuestionStats(examData.questions, totalMarks);
+    const topRankers = await getMarksAboveInfo()
 
     return NextResponse.json(
       {
@@ -273,7 +275,8 @@ export async function POST(req: NextRequest) {
           correct: questionStats.correct,
           wrong: questionStats.wrong,
           totalMarks: questionStats.totalMarks
-        }
+        },
+        topRankers
       }
     );
 

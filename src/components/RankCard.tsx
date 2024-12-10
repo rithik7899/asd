@@ -4,6 +4,20 @@ import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Download } from 'lucide-react'
 import { JSX } from "react"
+import TopRankers from "./TopRank"
+
+export interface MarksAboveData {
+  marksAbove70: Record<string, number>;
+  marksAbove65: Record<string, number>;
+  marksAbove60: Record<string, number>;
+  marksAbove55: Record<string, number>;
+  marksAbove50: Record<string, number>;
+  marksAbove45: Record<string, number>;
+  marksAbove40: Record<string, number>;
+  marksAbove35: Record<string, number>;
+  marksAbove30: Record<string, number>;
+  marksAbove20: Record<string, number>;
+}
 
 export interface StudentProps {
   fullName: string
@@ -41,7 +55,8 @@ export interface StudentProps {
     correct: number
     wrong: number
     totalMarks: number
-  }
+  },
+  topRankers: MarksAboveData
 }
 
 export function RankCard({
@@ -54,7 +69,8 @@ export function RankCard({
   testCenter,
   subject,
   avgMarks,
-  stats
+  stats,
+  topRankers
 }: StudentProps): JSX.Element {
 
   return (
@@ -233,6 +249,7 @@ export function RankCard({
           </CardContent>
         </Card>
       </div>
+      <TopRankers data={topRankers}/>
     </div>
   )
 }
