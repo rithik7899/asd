@@ -99,6 +99,6 @@ const DownloadCard = forwardRef<HTMLDivElement, ScoreCardProps>(({
     )
 })
 
-// DownloadCard.displayName = 'DownloadCard';
+DownloadCard.displayName = 'DownloadCard';
 
 export default DownloadCard;
