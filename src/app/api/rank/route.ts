@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     const config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: answerKeyUrl,
+      url: `${answerKeyUrl}asd`,
       headers: {
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
         'Accept-Language': 'en-US,en;q=0.9',
@@ -122,7 +122,7 @@ export async function POST(req: NextRequest) {
 
     const extractQuestionId = (questionText: string): string => {
       const match = questionText.match(/Question ID :(\d+)/);
-      return match ? match[1] : '';
+      return match ? match[1] : ' ';
     };
 
     const exam = await prisma.exam.findUnique({

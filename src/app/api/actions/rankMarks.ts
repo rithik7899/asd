@@ -1,7 +1,7 @@
 import prisma from '../../../../prisma/src';
 import redis from '@/lib/redis';
 
-const CACHE_EXPIRATION = 600;
+const CACHE_EXPIRATION = 10;
 
 type MarksAboveData = {
   [key: string]: Record<string, number>;

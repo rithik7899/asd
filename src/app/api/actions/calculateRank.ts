@@ -1,7 +1,7 @@
 import redis from '../../../lib/redis';
 import  prisma  from '../../../../prisma/src';
 
-const TTL = 10; // will change this
+const TTL = 300;
 
 export const getRankForUser = async (examId: string, rollNumber: string) => {
   const userMarks = await prisma.examAttempt.findUnique({
