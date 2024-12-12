@@ -9,8 +9,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("POOLING_URL")
+  directUrl = env("DATABASE_URL")
 }
 
 model User {
@@ -68,7 +69,7 @@ model Answer {
   examAttemptId String
   chosenOption  String?
   isCorrect     Boolean?
-  user          User?        @relation(fields: [userId], references: [id])
+  user          User?       @relation(fields: [userId], references: [id])
   question      Question    @relation(fields: [questionId], references: [questionId])
   ExamAttempt   ExamAttempt @relation(fields: [examAttemptId], references: [id])
 }
