@@ -26,6 +26,9 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
+    console.log("I'm hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+    
+
     const { answerKeyUrl, category, language } = body;
     if (!answerKeyUrl || !category || !language) {
       return NextResponse.json(
