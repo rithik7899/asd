@@ -38,13 +38,24 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const response = await axios.get(answerKeyUrl, {
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Accept': 'application/json',
-        'Referer': 'https://rrb.digialm.com/',
-      }
-    });
+    let response;
+    try {
+      response = await axios.get(answerKeyUrl, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+          'Accept': 'application/json',
+          'Referer': 'https://rrb.digialm.com/',
+        }
+      });
+    } catch (e) {
+      console.error(e, "Error fetching details")
+    }
+    if (!response) {
+      NextResponse.json({
+        message: "no response"
+      })
+      return
+    }
 
     const html = response.data;
 
@@ -250,7 +261,7 @@ export async function POST(req: NextRequest) {
         })
       );
     }
-    
+
     const userRank = await getRankForUser(exam.id, rollNumber);
     const avgMarks = await getAverageMarks(exam.id, category, testTime);
     const questionStats = calculateQuestionStats(examData.questions, totalMarks);
