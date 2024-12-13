@@ -51,6 +51,7 @@ export default function SubmitForm() {
   })
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    console.log("i got submitted ")
     setIsLoading(true);
     try {
       const data = await axios.post(`/api/rank`, {
