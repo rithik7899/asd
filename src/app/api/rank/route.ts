@@ -26,9 +26,6 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
 
-    console.log("I'm hereeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-    
-
     const { answerKeyUrl, category, language } = body;
     if (!answerKeyUrl || !category || !language) {
       return NextResponse.json(
@@ -42,6 +39,7 @@ export async function POST(req: NextRequest) {
     }
 
     let response;
+
     try {
       response = await axios.get(answerKeyUrl, {
         headers: {
@@ -53,12 +51,12 @@ export async function POST(req: NextRequest) {
     } catch (e) {
       console.error(e, "Error fetching details")
     }
-    console.log(response,"------------------------------------------------------------------------------------")
+
     if (!response) {
-      NextResponse.json({
-        message: "no response"
+      return NextResponse.json({
+        message: "failed to fetch details of students"
       })
-      return
+      
     }
 
     const html = response.data;
