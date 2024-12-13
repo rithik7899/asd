@@ -53,7 +53,7 @@ export default function SubmitForm() {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     setIsLoading(true);
     try {
-      const data = await axios.post(`${process.env.NEXT_PUBLIC_URL}/api/rank`, {
+      const data = await axios.post(`/api/rank`, {
         answerKeyUrl: values.answerKeyUrl,
         category: values.category,
         password: values.password,
