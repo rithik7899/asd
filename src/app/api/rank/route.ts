@@ -53,6 +53,7 @@ export async function POST(req: NextRequest) {
     } catch (e) {
       console.error(e, "Error fetching details")
     }
+    console.log(response)
     if (!response) {
       NextResponse.json({
         message: "no response"
